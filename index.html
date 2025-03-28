@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Joke Of The Day</title>
+    <link rel="stylesheet" href="styles.css">
     <script defer src="script.js"></script>
     <style>
         body {
@@ -21,7 +22,7 @@
 </head>
 <body>
     <h1 id="joke-title">Joke Of The Day</h1>
-    <p id="joke"></p>
+    <p id="joke">Loading...</p>
     
     <button onclick="fetchJoke('Any')">Random Joke</button>
     <button onclick="fetchJoke('Programming')">Programming</button>
@@ -29,36 +30,5 @@
     <button onclick="fetchJoke('Pun')">Pun</button>
     <button onclick="fetchJoke('Spooky')">Spooky</button>
     <button onclick="fetchJoke('Christmas')">Christmas</button>
-    
-    <script>
-        async function fetchJoke(category) {
-            const url = `https://v2.jokeapi.dev/joke/${category}?safe-mode`;
-            try {
-                const response = await fetch(url);
-                const data = await response.json();
-                
-                let jokeText = "";
-                if (data.type === "single") {
-                    jokeText = data.joke;
-                } else {
-                    jokeText = `${data.setup} ... ${data.delivery}`;
-                }
-                
-                document.getElementById("joke").textContent = jokeText;
-                
-                if (category === "Any") {
-                    document.getElementById("joke-title").textContent = "Joke Of The Day";
-                } else if (category === "Pun") {
-                    document.getElementById("joke-title").textContent = "A Random Pun";
-                } else {
-                    document.getElementById("joke-title").textContent = `A Random ${category} Joke`;
-                }
-            } catch (error) {
-                document.getElementById("joke").textContent = "Failed to load a joke. Please try again!";
-            }
-        }
-
-        window.onload = () => fetchJoke('Any');
-    </script>
 </body>
 </html>
