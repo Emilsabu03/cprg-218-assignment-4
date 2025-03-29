@@ -2,48 +2,24 @@ async function fetchJoke(category) {
     const jokeElement = document.getElementById("joke");
     const titleElement = document.getElementById("joke-title");
 
-    // Show loading message
+    /* Show loading text while finding a joke */
     jokeElement.textContent = "Loading...";
 
-    const url = `https://v2.jokeapi.dev/joke/${category}?safe-mode`;
-
     try {
-        const response = await fetch(url);
-        
-        // Check if the response is okay
-        if (!response.ok) {
-            throw new Error("Failed to fetch the joke.");
-        }
-
+        const response = await fetch(`https://v2.jokeapi.dev/joke/${category}?safe-mode`);
         const data = await response.json();
 
-        // Log the data to check the structure in the console
-        console.log(data);
+        jokeElement.textContent = data.type === "single" ? data.joke : `${data.setup} ... ${data.delivery}`;
+        titleElement.textContent = category === "Any" ? "Joke Of The Day" : 
+        category === "Pun" ? "A Random Pun" : `A Random ${category} Joke`;
 
-        // Handle different types of jokes
-        let jokeText = "";
-        if (data.type === "single") {
-            jokeText = data.joke; // For single-part jokes
-        } else if (data.type === "twopart") {
-            jokeText = `${data.setup} ... ${data.delivery}`; // For two-part jokes
-        }
+    } 
 
-        jokeElement.textContent = jokeText;
-
-        // Change the title based on the category
-        if (category === "Any") {
-            titleElement.textContent = "Joke Of The Day";
-        } else if (category === "Pun") {
-            titleElement.textContent = "A Random Pun";
-        } else {
-            titleElement.textContent = `A Random ${category} Joke`;
-        }
-
-    } catch (error) {
-        jokeElement.textContent = "Oops! Couldn't fetch a joke. Please try again later.";
-        console.error("Error:", error); // Log the error in the console
+    /* Tells this if the joke dosen't work*/
+    catch {
+        jokeElement.textContent = "Oops! Couldn't fetch a joke. Try again later.";
     }
 }
 
-// Load a random joke on page load
+// Load a random joke while the page loads
 window.onload = () => fetchJoke('Any');
